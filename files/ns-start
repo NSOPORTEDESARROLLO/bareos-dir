@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#Checking for config files
+CONFIG=$(ls -A /etc/bareos)
+MYSQL=$(ls -A /mysql)
+
+if [ "$CONFIG" = "" ];then
+	tar -xzvf /opt/bareos-etc-dir.tgz -C /
+fi
+
+
+if [ "$MYSQL" = "" ];then
+	tar -xzvf /opt/mysql.tgz -C /mysql	
+fi
+
+
+#Fixing Bareos Permissions
+chown -R bareos.bareos /etc/bareos
+
+
+#Not running until mysql gets ready 
+SQLTEST=1
+
+while [ $SQLTEST -ne 0 ] ;do
+	echo "Checking Configuration and Database connection ... "
+  	su -s /bin/sh bareos -c "/usr/sbin/bareos-dir -f -t" >> /dev/null
+	SQLTEST=$?
+	echo "Waiting 30 seconds to check again!"
+	sleep 30
+
+done
