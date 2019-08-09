@@ -19,12 +19,14 @@ RUN				wget -q http://download.bareos.org/bareos/release/latest/Debian_9.0/Relea
 
 
 #Install Bareos Director
-ENV  			DEBIAN_FRONTEND=noninteractive
-RUN				apt-get install -y  bareos-database-mysql; \
-				apt-get install -y bareos-director; \
-				cd /usr/share/dbconfig-common/data/bareos-database-common; \		
+ENV  			DEBIAN_FRONTEND noninteractive
+
+RUN				apt-get install -y bareos-director; \
+				apt-get install -y  bareos-database-mysql; \
 				tar -czvf /opt/bareos-etc-dir.tgz /etc/bareos; \
-				rm -rf /etc/bareos; mkdir /etc/bareos; mkdir /mysql
+				cd /usr/share/dbconfig-common/data/bareos-database-common; \					
+				tar -czvf /opt/db.tgz  .; \
+				rm -rf /etc/bareos; mkdir /etc/bareos; mkdir /db
 
 
 
