@@ -22,18 +22,21 @@ RUN				wget -q http://download.bareos.org/bareos/release/latest/Debian_9.0/Relea
 ENV  			DEBIAN_FRONTEND noninteractive
 
 RUN				apt-get install -y bareos-director; \
-				apt-get install -y  bareos-database-mysql bareos-bconsole; \
+				apt-get install -y  bareos-database-mysql mysql-client bareos-bconsole; \
 				tar -czvf /opt/bareos-etc-dir.tgz /etc/bareos; \
 				cd /usr/share/dbconfig-common/data/bareos-database-common; \					
 				tar -czvf /opt/db.tgz  .; \
-				rm -rf /etc/bareos; mkdir /etc/bareos; mkdir /db
+				rm -rf /etc/bareos; mkdir /etc/bareos; mkdir /db; mkdir /catalog_backup
 
 
 
 #Starting Files
 COPY			files/ns-start /usr/bin/
+COPY			files/delete_catalog_backup /usr/lib/bareos/scripts/
+COPY			files/make_catalog_backup.pl /usr/lib/bareos/scripts/
 
-RUN				chmod +x /usr/bin/ns-start
+RUN				chmod +x /usr/bin/ns-start; \
+				chmod +x /usr/lib/bareos/scripts/*
 
 ENTRYPOINT		[ "/usr/bin/ns-start" ]
 
