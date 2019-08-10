@@ -16,6 +16,8 @@ fi
 
 #Fixing Bareos Permissions
 chown -R bareos.bareos /etc/bareos
+chown -R bareos.bareos /catalog_backup
+chown -R bareos.bareos /db
 
 
 #Not running until mysql gets ready 
